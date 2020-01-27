@@ -1,22 +1,23 @@
  #include <stdlib.h>
  #include <stdio.h>
  
-#DEFINE MAX_DATA-STACK_HEIGHT 30
-#DEFINE MAX_CODE_LENGTH 500
+#DEFINE MAX_DATA-STACK_HEIGHT 40
+#DEFINE MAX_CODE_LENGTH 200
 #DEFINE MAX_LEXI_LEVELS 3
 
  
 struct {
 int op; // opcode
+int r; // register
 int l; // levels
 int m; // all the stuff M stands for
 }instruction;
 
 /* POINTER INTITIALIZATONS*/
-sp = 0;
-bp = 1;
-pc = 0;
-ir  = 0;
+int sp = 0;
+int bp = 1;
+int pc = 0;
+int ir  = 0;
 
 int stack[MAX DATA-STACK HEIGHT] = {0}; // initializes all values in array to 0
 
@@ -24,8 +25,9 @@ main()
 {
 return 0;
 } 
+/* FETCH CYCLE */
+/* EXECUTE CYCLE */
 
-/* Montagne's base function*/
 int base(int l, int base) // l stand for L in the instruction format
 {  
   int b1; //find base L levels down
@@ -38,44 +40,28 @@ int base(int l, int base) // l stand for L in the instruction format
   return b1;
 }
  /* PSEUDOCODE */
- // LIT *edited* in his docs
- if ( bp == 0)
- {
- 	gp = gp + 1;
- 	stack[gp] = M;
- }
- else
- {
-  sp = sp - 1;  
-  stack[sp] = M;	
- }
-
+ // LIT 1
  
- //OPR IS DEF A SWITCH STATEMENT 2
+ // RTN 2
+ sp = bp -1;
+ bp = stack[sp+3];
+ pc = stack[sp+4];
  
  // LOD 3
- sp = sp -1;
- if (base(L, bp) == 0) 
-   stack[sp]  stack[ base(L, bp) + M];
-			else
-			   stack[sp]  stack[ base(L, bp) - M];
 
- 
  // STO 4
- if (base(l,bp) == 0)
- {
- 	stack[base(l,bp) + m] = stack[gp];
-	gp = gp -1;
- }
+
  // CAL 5
  // INC 6
+ sp = sp + m;
  // JMP 7
  pc = m;
  // JPC 8
  if (stack [sp] == 0)
  {
  	pc = m;
- 	s
  }
- // SIO 9-11
+ // SIO 9
+ // SIO 10
+ // SIO 11
  
