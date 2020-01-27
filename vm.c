@@ -26,6 +26,9 @@ main()
 return 0;
 } 
 /* FETCH CYCLE */
+ir = stack[pc];
+pc = pc +1;
+
 /* EXECUTE CYCLE */
 
 int base(int l, int base) // l stand for L in the instruction format
