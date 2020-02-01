@@ -8,7 +8,7 @@
 #define MAX_LEXI_LEVELS 3
 
 
-typedef struct Stack{
+/* typedef struct Stack{
 
   int size;
 
@@ -16,7 +16,7 @@ typedef struct Stack{
 
   int capacity;
 
-} Stack;
+} Stack; */
 
 typedef struct Instruction{
   int op;
@@ -79,36 +79,40 @@ int main(){
   FILE *ifp = NULL;
 
   int stack[MAX DATA-STACK HEIGHT] = {0};
+  int reg[8] = {0}; // registers initialized to 0
 
-  strcpy(filename, "input.txt");
+  
+  //code creation
+strcpy(filename, "input.txt");
   ifp = fopen(filename, "r");
   if(ifp == NULL)
     printf("FILE READ ERROR, TRY AGAIN");
-  //code creation
-
+	
   Instruction *code[MAX_CODE_LENGTH];
 
 
 
-
-
-  Instruction *current = buildIR(0,0,0,0);
+ /* Instruction *current = buildIR(0,0,0,0);
 
   while(fscanf(ifp, "%d %d %d %d", &opcode, &r, &l, &m) != EOF){
 
       code[codecount] = buildIR(opcode, r, l, m);
-      codecount++;
+      codecount++; */
 
 
   }
-    IR = code[pc];
-    pc = pc + 1;
+
+/* FETCH CYCLE */
+    // IR = code[pc];
+    // pc = pc + 1;
     halt = 0;
 
   /* EXEXCUTE CYCLE */
   while(halt != 1){
+  IR = code[pc]; 
+  pc = pc + 1;
      /* PSEUDOCODE put this in a switch statement */
-     switch (opcode)
+     switch (IR->op)
      {
      	case 1 :
       // LIT 1
@@ -232,10 +236,7 @@ int main(){
 
   }
 
-  void read ()
-  {
 
-  }
 
 
 
