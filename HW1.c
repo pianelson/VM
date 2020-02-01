@@ -18,6 +18,15 @@
 
 } Stack; */
 
+char* OPS[] =  // OP Code stuff for printing
+{
+  "",
+  //11 basic instructions
+  "lit","rtn","lod","sto","cal","inc","jmp","jpc","sio",
+  //13 arithmetic instructions
+  "neg","add","sub","mul","div","odd","mod","eql","neq","lss","leq","gtr","geq"
+};
+
 typedef struct Instruction{
   int op;
   int R;
