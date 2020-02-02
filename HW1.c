@@ -80,7 +80,7 @@ int pc = 0;
     // IR = code[pc];
     // pc = pc + 1;
     int halt = 0;
-    Instruction *irp;
+    Instruction *IR;
 
   /* EXECUTE CYCLE */
 void execute ()
