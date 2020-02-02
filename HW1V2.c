@@ -9,13 +9,9 @@
 
 
 /* typedef struct Stack{
-
   int size;
-
   int *values;
-
   int capacity;
-
 } Stack; */
 
 char* OPS[] =  // OP Code stuff for printing
@@ -88,12 +84,14 @@ strcpy(filename, "input.txt");
 
   Instruction *code[MAX_CODE_LENGTH];
 
-  printf("Line	OP	R	L	M");
+  printf("Line	OP	R	L	M \n");
   while(fscanf(ifp, "%d %d %d %d", &opcode, &r, &l, &m) != EOF){
 
       code[codecount] = buildIR(opcode, r, l, m);
-      printf("%d %s \t %d %d %d", codecount, OPS[opcode], r, l, m);
+      printf("%d	%s	 %d	%d 	%d \n", codecount, OPS[opcode], r, l, m);
       codecount++;
+      
+      
   }
 
   int halt = 0;
@@ -226,4 +224,5 @@ strcpy(filename, "input.txt");
      break;
     }
   }
+  return 0;
 }
