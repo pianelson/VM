@@ -81,22 +81,26 @@ strcpy(filename, "input.txt");
   ifp = fopen(filename, "r");
   if(ifp == NULL)
     printf("FILE READ ERROR, TRY AGAIN");
-
+	
+ /* OUTPUT #1 */
   Instruction *code[MAX_CODE_LENGTH];
-
   printf("Line	OP	R	L	M \n");
-  while(fscanf(ifp, "%d %d %d %d", &opcode, &r, &l, &m) != EOF){
-
+  while(fscanf(ifp, "%d %d %d %d", &opcode, &r, &l, &m) != EOF)
+  {
       code[codecount] = buildIR(opcode, r, l, m);
       printf("%d	%s	 %d	%d 	%d \n", codecount, OPS[opcode], r, l, m);
       codecount++;
-      
-      
   }
+  	/* OUTPUT #2 */
+	int regloop;
+	 printf("\n		pc	bp	sp	registers\n");
+	printf("Initial values	%d	%d	%d	",pc,bp,sp);
+      for(regloop=0; regloop < 8; regloop++)
+      	printf("%d ", reg[regloop]);
 
   int halt = 0;
   Instruction *IR;
-  /* EXEXCUTE CYCLE */
+  /* EXECUTE CYCLE */
   while(halt != 1){
 
   IR = code[pc];
