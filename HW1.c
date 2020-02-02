@@ -18,10 +18,8 @@
 
 } Stack; */
 
-char* OPS[] =  // OP Code stuff for printing
-{
-  "",
-  //11 basic instructions
+char** OPS[] =  // OP Code stuff for printing
+{  //11 basic instructions
   "lit","rtn","lod","sto","cal","inc","jmp","jpc","sio",
   //13 arithmetic instructions
   "neg","add","sub","mul","div","odd","mod","eql","neq","lss","leq","gtr","geq"
@@ -29,15 +27,15 @@ char* OPS[] =  // OP Code stuff for printing
 
 typedef struct Instruction{
   int op;
-  int R;
-  int L;
-  int M;
+  int r;
+  int l;
+  int m;
 
 } Instruction;
 
 
 
-Stack *buildStack()
+/*Stack *buildStack()
 {
 	Stack *VM;
 
@@ -54,7 +52,7 @@ Stack *buildStack()
 	VM->capacity = MAX_STACK_HEIGHT;
 
 	return VM;
-}
+} */
 
 Instruction *buildIR(int opcode, int r, int l, int m){
 
@@ -64,74 +62,42 @@ Instruction *buildIR(int opcode, int r, int l, int m){
     return NULL;
 
   IR->op = opcode;
-  IR->R = r;
-  IR->L = l;
-  IR->M = m;
+  IR->r = r;
+  IR->l = l;
+  IR->m = m;
 
   return IR;
 
 }
 
+int userIn = 0;
 int sp = 0;
 int bp = 1;
 int pc = 0;
 
 
-
-int main(){
-  //Variable declaration
-  int i;
-  int codecount = 0;
-  int opcode, r, l, m;
-  char filename[30];
-  //file i/o and stack creation
-  FILE *ifp = NULL;
-
-  int stack[MAX DATA-STACK HEIGHT] = {0};
-  int reg[8] = {0}; // registers initialized to 0
-
-  
-  //code creation
-strcpy(filename, "input.txt");
-  ifp = fopen(filename, "r");
-  if(ifp == NULL)
-    printf("FILE READ ERROR, TRY AGAIN");
-	
-  Instruction *code[MAX_CODE_LENGTH];
-
-
-
- Instruction *current = buildIR(0,0,0,0);
-  printf("Line	OP	R	L	M");
-  while(fscanf(ifp, "%d %d %d %d", &opcode, &r, &l, &m) != EOF){
-
-      code[codecount] = buildIR(opcode, r, l, m);
-      printf(codecount+"	"+opcode+"	"+r+"	"+l+"	"+m+"	");
-      codecount++; 
-
-
-
-  }
-
 /* FETCH CYCLE */
     // IR = code[pc];
     // pc = pc + 1;
-    halt = 0;
+    int halt = 0;
+    Instruction *irp;
 
-  /* EXEXCUTE CYCLE */
+  /* EXECUTE CYCLE */
+void execute ()
+{
   while(halt != 1){
-  IR = code[pc]; 
+  Instruction* IR = code[pc]; 
   pc = pc + 1;
      /* PSEUDOCODE put this in a switch statement */
      switch (IR->op)
      {
-     	case 1 :
+     case 1:
       // LIT 1
-     IR->r = IR->m;
+     reg[IR->r] = IR->m;
      break;
 
      // RTN 2
-     case 2 :
+     case 2:
      sp = bp -1;
      bp = stack[sp+3];
      pc = stack[sp+4];
@@ -139,12 +105,12 @@ strcpy(filename, "input.txt");
 
      // LOD 3
      case 3:
-     IR->r = stack[base(IR->l,bp)+IR->m];
+     reg[IR->r] = stack[base(IR->l,bp)+IR->m];
      break;
 
      // STO 4
      case 4 :
-     stack[base(IR->l,bp)+IR->m] = IR->r;
+     stack[base(IR->l,bp)+IR->m] = reg[IR->r];
      break;
 
      // CAL 5
@@ -169,7 +135,7 @@ strcpy(filename, "input.txt");
 
      // JPC 8
      case 8:
-     if (stack [sp] == 0)
+     if (reg[IR->r] == 0)
      {
      	pc = IR->m;
      }
@@ -177,12 +143,12 @@ strcpy(filename, "input.txt");
 
      // SIO 9
      case 9:
-     print(IR->r);
+     printf(reg[IR->r]);
      break;
 
      // SIO 10
      case 10:
-     read(IR->r);
+     scanf("%d", reg[IR->r]);
      break;
 
      // SIO 11
@@ -193,65 +159,104 @@ strcpy(filename, "input.txt");
      /* OPR */
     // NEG 12
      case  12:
-     IR->r = -IR->r;
+     reg[IR->r] = -reg[IR->r];
      break;
 
      case 13:
-     IR->r = IR->l + IR->m;
+     reg[IR->r] = reg[IR->l] + reg[IR->m];
      break;
 
      case 14:
-     IR->r = IR->l - IR->m;
+     reg[IR->r] = reg[IR->l] - reg[IR->m];
      break;
 
      case 15:
-     IR->r = IR->l * IR->m;
+     reg[IR->r] = reg[IR->l] * reg[IR->m];
+     break;
 
      case 16:
-     IR->r = IR->l / IR->m;
+     reg[IR->r] = reg[IR->l] / reg[IR->m];
+     break;
 
      case 17:
-     IR->r = IR->r mod 2;
+     reg[IR->r] = reg[IR->r] % 2;
+     break;
 
      case 18:
-     IR->r = (IR->l) mod (IR->m);
+     reg[IR->r] = reg[IR->l] % reg[IR->m];
      break;
 
      case 19:
-     IR->r = IR->l == IR->m;
+     reg[IR->r] = reg[IR->l] == reg[IR->m];
      break;
 
      case 20:
-     IR->r = IR->l != IR->m;
+     reg[IR->r] = reg[IR->l] != reg[IR->m];
      break;
 
      case 21:
-     IR->r = IR->l < IR->m;
+     reg[IR->r] = reg[IR->l] < reg[IR->m];
      break;
 
      case 22:
-     IR->r = IR->l <= IR->m;
+     reg[IR->r] = reg[IR->l] <= reg[IR->m];
      break;
 
      case 23:
-     IR->r = IR->l > IR->m;
+     reg[IR->r] = reg[IR->l] > reg[IR->m];
      break;
 
      case 24:
-     IR->r = IR->l => IR->m;
+     reg[IR->r] = reg[IR->l] >= reg[IR->m];
      break;
-  }
-
-  void print ()
-  {
-    printf("Line	OP	R	L	M");
-  }
+     
+     default :
+     	error_stackOverflow();
+     	break;
+}
+return; 
 
 void error_stackOverflow ()
 {
 	printf("ERROR: STACK OVERFLOW");
 }
 
+	  
+int main(){
+  //Variable declaration
+  int i;
+  int codecount = 0;
+  int opcode, r, l, m;
+  char filename[30];
+  //file i/o and stack creation
+  FILE *ifp = NULL;
+
+  int stack[MAX_STACK_HEIGHT] = {0};
+  int reg[8] = {0}; // registers initialized to 0
+
+  
+  //code creation
+strcpy(filename, "input.txt");
+  ifp = fopen(filename, "r");
+  if(ifp == NULL)
+    printf("FILE READ ERROR, TRY AGAIN");
+	
+  Instruction *code[MAX_CODE_LENGTH];
+
+
+
+ //Instruction *current = buildIR(0,0,0,0);
+	
+  printf("Line	OP	R	L	M");
+  while(fscanf(ifp, "%d %d %d %d", &opcode, &r, &l, &m) != EOF){
+
+      code[codecount] = buildIR(opcode, r, l, m);
+      printf("%d %s %t %d %t %d %t %d", codecount, OPS[opcode], r, l, m);
+      codecount++; 
+
+
+
+  }
 
     }
     free(IR);
