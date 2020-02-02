@@ -101,12 +101,14 @@ strcpy(filename, "input.txt");
 
 
 
- /* Instruction *current = buildIR(0,0,0,0);
-
+ Instruction *current = buildIR(0,0,0,0);
+  printf("Line	OP	R	L	M");
   while(fscanf(ifp, "%d %d %d %d", &opcode, &r, &l, &m) != EOF){
 
       code[codecount] = buildIR(opcode, r, l, m);
-      codecount++; */
+      printf(codecount+"	"+opcode+"	"+r+"	"+l+"	"+m+"	");
+      codecount++; 
+
 
 
   }
@@ -242,11 +244,13 @@ strcpy(filename, "input.txt");
 
   void print ()
   {
-
+    printf("Line	OP	R	L	M");
   }
 
-
-
+void error_stackOverflow ()
+{
+	printf("ERROR: STACK OVERFLOW");
+}
 
 
     }
