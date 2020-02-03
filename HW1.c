@@ -267,10 +267,9 @@ strcpy(filename, "input.txt");
     printf("\nStack: ");
     for(stackloop = 1; stackloop < sp+1; stackloop++)
 		printf("%d ", stack[stackloop]);
-
-    
-	}
+}
 	return 0;
+	
 	
 }
 
