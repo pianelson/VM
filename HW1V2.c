@@ -9,9 +9,13 @@
 
 
 /* typedef struct Stack{
+
   int size;
+
   int *values;
+
   int capacity;
+
 } Stack; */
 
 char* OPS[] =  // OP Code stuff for printing
@@ -55,12 +59,39 @@ int base(l, base) // l stand for L in the instruction format
 {
   int b1; //find base L levels down
   b1 = base;
+  //printf("B1 BEFORE IS: %d\n", b1);
+  //printf("L is: %d\n",l);
   while (l > 0)
   {
     b1 = stack[b1 + 1];
     l--;
   }
+
+  //printf("B1 AFTER IS: %d\n", b1);
+  if(b1 == 0)
+    b1++;
   return b1;
+}
+
+void printStack(int* stack, int sp, int bp){
+  if (bp == 0){
+    return;
+  }
+  if(bp == 1){
+    printf("");
+  }
+  if(bp != 1){
+    printStack(stack, bp-1, stack[bp+2]);
+  }
+  if(bp <= sp){
+    if(bp != 1)
+      printf("| ");
+
+    int i;
+    for(i = bp; i <= sp; i++){
+      printf("%d ", stack[i]);
+    }
+  }
 }
 
 int main(){
@@ -77,44 +108,50 @@ int main(){
 
 
   //code creation
-strcpy(filename, "input.txt");
+  strcpy(filename, "input.txt");
   ifp = fopen(filename, "r");
   if(ifp == NULL)
     printf("FILE READ ERROR, TRY AGAIN");
-	
- /* OUTPUT #1 */
+
   Instruction *code[MAX_CODE_LENGTH];
-  printf("Line	OP	R	L	M \n");
-  while(fscanf(ifp, "%d %d %d %d", &opcode, &r, &l, &m) != EOF)
-  {
+
+  printf("Line\tOP\tR\tL\tM\n");
+  while(fscanf(ifp, "%d %d %d %d", &opcode, &r, &l, &m) != EOF){
+
       code[codecount] = buildIR(opcode, r, l, m);
-      printf("%d	%s	 %d	%d 	%d \n", codecount, OPS[opcode], r, l, m);
+      printf("%d\t%s\t%d\t%d\t%d\n", codecount, OPS[opcode-1], r, l, m);
       codecount++;
   }
-  	/* OUTPUT #2 */
-	int regloop;
-	 printf("\n		pc	bp	sp	registers\n");
-	printf("Initial values	%d	%d	%d	",pc,bp,sp);
-      for(regloop=0; regloop < 8; regloop++)
-      	printf("%d ", reg[regloop]);
 
   int halt = 0;
-  Instruction *IR;
-  /* EXECUTE CYCLE */
-  while(halt != 1){
+  /* EXEXCUTE CYCLE */
 
+  printf("                      pc  bp  sp   registers\n");
+  printf("Initial Values        %d   %d   %d    %d %d %d %d %d %d %d %d\n", pc, bp, sp, reg[0], reg[1], reg[2], reg[3], reg[4], reg[5], reg[6], reg[7]);
+  printf("Stack: ");
+  for(i = 0; i < MAX_STACK_HEIGHT; i++){
+    printf("%d ", stack[i]);
+  }
+  printf("\n");
+  int pcholder;
+  Instruction *IR;
+
+  while(halt != 1){
   IR = code[pc];
+  //printf("PC = %d\n", pc);
+  //printf("op = %d, r = %d, l = %d, m = %d\n", IR->op, IR->R, IR->L, IR->M);
   pc = pc + 1;
+  pcholder = pc;
 
      switch (IR->op)
      {
-     	case 1 :
+     case 1:
       // LIT 1
      reg[IR->R] = IR->M;
      break;
 
      // RTN 2
-     case 2 :
+     case 2:
      sp = bp -1;
      bp = stack[sp+3];
      pc = stack[sp+4];
@@ -127,7 +164,10 @@ strcpy(filename, "input.txt");
 
      // STO 4
      case 4 :
-     stack[base(IR->L,bp)+IR->M] = reg[IR->R];
+     //printf("base + ir->m : %d\n", (base(IR->L, bp)+IR->M));
+     stack[(base(IR->L,bp)+IR->M)] = reg[IR->R];
+     //printf("stack should be: %d\n", stack[5]);
+
      break;
 
      // CAL 5
@@ -227,6 +267,12 @@ strcpy(filename, "input.txt");
      reg[IR->R] = reg[IR->L] >= reg[IR->M];
      break;
     }
+
+    printf("                      pc  bp  sp   registers\n");
+    printf("%d %s %d %d %d          %d   %d   %d    %d %d %d %d %d %d %d %d \n", pcholder - 1, OPS[IR->op-1], IR->R, IR->L, IR->M, pcholder, bp, sp, reg[0], reg[1], reg[2], reg[3], reg[4], reg[5], reg[6], reg[7]);
+    printf("Stack: " );
+    printStack(stack, sp, bp);
+    printf("\n");
+
   }
-  return 0;
 }
